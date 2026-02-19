@@ -1,0 +1,63 @@
+<div class="mis-reservas">
+  <header class="header">
+    <div class="header-content">
+      <a routerLink="/" class="back-link">← Cartelera</a>
+      <h1>Mis Reservas</h1>
+    </div>
+  </header>
+
+  <div class="content">
+    @if (loading()) {
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p>Cargando reservas...</p>
+      </div>
+    } @else if (reservas().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        <h2>No tienes reservas</h2>
+        <p>Aún no has realizado ninguna reserva.</p>
+        <a routerLink="/" class="btn-primary">Ver cartelera</a>
+      </div>
+    } @else {
+      <div class="reservas-list">
+        @for (r of reservas(); track r.numeroTicket) {
+          <article class="reserva-card">
+            <div class="reserva-header">
+              <div class="ticket-badge">
+                <span class="badge-label">Ticket</span>
+                <span class="badge-number">{{ r.numeroTicket }}</span>
+              </div>
+              <button
+                type="button"
+                class="btn-delete"
+                (click)="eliminarReserva(r.numeroTicket)"
+                aria-label="Eliminar reserva">
+                ×
+              </button>
+            </div>
+            <div class="reserva-body">
+              <div class="reserva-info">
+                <p class="info-label">Nombre</p>
+                <p class="info-value">{{ r.nombres }} {{ r.apellidos }}</p>
+              </div>
+              <div class="reserva-info">
+                <p class="info-label">Email</p>
+                <p class="info-value">{{ r.email }}</p>
+              </div>
+              <div class="reserva-info">
+                <p class="info-label">Fecha de reserva</p>
+                <p class="info-value">{{ formatearFecha(r.fechaCreacion) }}</p>
+              </div>
+              @if (r.mensaje) {
+                <div class="reserva-mensaje">
+                  <p>{{ r.mensaje }}</p>
+                </div>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>

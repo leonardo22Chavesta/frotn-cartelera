@@ -1,0 +1,82 @@
+<div class="detalle">
+
+  @if (loading()) {
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+  }
+
+  @else if (error()) {
+    <div class="error-wrap">
+      <p class="error-msg">{{ error() }}</p>
+      <a routerLink="/">← Volver a cartelera</a>
+    </div>
+  }
+
+  @else {
+    @if (pelicula(); as p) {
+
+      <!-- Banner -->
+      <div class="banner-wrap">
+        <img [src]="p.imagenUrl" [alt]="p.titulo" class="banner" />
+        <div class="banner-overlay"></div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="content">
+        <a routerLink="/" class="back">← Cartelera</a>
+
+        <h1>{{ p.titulo }}</h1>
+        <p class="meta">
+          {{ p.genero?.nombre }} · {{ p.duracion }} min
+        </p>
+
+        <!-- Funciones -->
+        @if (p.funciones && p.funciones.length > 0) {
+          <section class="funciones">
+            <h2>Funciones disponibles</h2>
+
+            <div class="funciones-grid">
+              @for (f of p.funciones; track f.funcionId) {
+                <div class="funcion-card">
+
+                  <p class="sala">{{ f.sala }}</p>
+
+                  <p class="hora">
+                    {{ f.horaInicio }} 
+                  </p>
+
+                  
+
+                  <button
+                    type="button"
+                    class="btn-reservar"
+                    (click)="openReserva(f.funcionId)">
+                    Reservar
+                  </button>
+
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        @else {
+          <p class="empty-funciones">
+            No hay funciones disponibles.
+          </p>
+        }
+
+      </div>
+    }
+  }
+
+  @if (showReservaModal() && funcionIdReserva(); as fid) {
+    <app-reserva-modal
+      [funcionId]="fid"
+      (close)="closeReserva()"
+      (reservaOk)="onReservaOk()" />
+  }
+
+</div>

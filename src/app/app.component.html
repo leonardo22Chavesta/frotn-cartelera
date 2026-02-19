@@ -1,0 +1,12 @@
+<div class="app">
+  <header class="app-header">
+    <a routerLink="/" class="logo">Cine</a>
+    <nav class="nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Cartelera</a>
+      <a routerLink="/mis-reservas" routerLinkActive="active">Mis Reservas</a>
+    </nav>
+  </header>
+  <main class="app-main">
+    <router-outlet />
+  </main>
+</div>

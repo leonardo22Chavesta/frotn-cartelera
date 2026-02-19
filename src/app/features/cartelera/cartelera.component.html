@@ -1,0 +1,83 @@
+<div class="cartelera">
+  <header class="header">
+    <h1>Cartelera</h1>
+    <div class="filtros">
+      <div class="filtro">
+        <label>Género</label>
+        <select
+          [value]="generoId()"
+          (change)="onGeneroChange($any($event.target).value)">
+          <option value="">Todos</option>
+          @for (g of generos(); track g.id) {
+            <option [value]="g.id">{{ g.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="filtro">
+        <label>Sala</label>
+        <select
+          [value]="salaId()"
+          (change)="onSalaChange($any($event.target).value)">
+          <option value="">Todas</option>
+          @for (s of salas(); track s.id) {
+            <option [value]="s.id">{{ s.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="filtro">
+        <label>Título</label>
+        <input
+          type="text"
+          [ngModel]="titulo()"
+          (ngModelChange)="titulo.set($event)"
+          placeholder="Buscar por título" />
+      </div>
+      <div class="filtro">
+        <label>Hora inicio</label>
+        <input
+          type="datetime-local"
+          [ngModel]="horaInicio()"
+          (ngModelChange)="horaInicio.set($event)" />
+      </div>
+      <button type="button" class="btn-filtrar" (click)="cargarPeliculas()">
+        Filtrar
+      </button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p>Cargando cartelera...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-wrap">
+      <p class="error-msg">{{ error() }}</p>
+      <button type="button" class="btn-retry" (click)="cargarPeliculas()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (p of peliculas(); track p.idPelicula) {
+        <article class="card">
+          <div class="card-img-wrap">
+            <img [src]="p.imagenUrl" [alt]="p.titulo" />
+            <div class="card-overlay">
+              <a [routerLink]="['/pelicula', p.idPelicula]" class="btn-ver">Ver Detalle</a>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2>{{ p.titulo }}</h2>
+            <p class="meta">{{ p.genero?.nombre ?? '—' }}</p>
+            <p class="meta">{{ p.duracion }} min</p>
+            <p class="meta">{{ primeraHora(p) }}</p>
+          </div>
+        </article>
+      }
+    </div>
+    @if (peliculas().length === 0) {
+      <p class="empty">No hay películas con los filtros seleccionados.</p>
+    }
+  }
+</div>

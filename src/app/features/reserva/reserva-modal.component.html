@@ -1,0 +1,116 @@
+<div class="modal-backdrop" (click)="cerrar()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    @if (ticket(); as t) {
+      <div class="ticket-view">
+        <div class="ticket-card">
+          <div class="ticket-header">
+            <span class="ticket-label">Tu entrada</span>
+          </div>
+          <div class="ticket-body">
+            <p class="ticket-numero">{{ t.numeroTicket }}</p>
+            @if (t.mensaje) {
+              <p class="ticket-msg">{{ t.mensaje }}</p>
+            } @else {
+              <p class="ticket-msg">Reserva confirmada. Presenta este número en taquilla.</p>
+            }
+          </div>
+        </div>
+        <div class="ticket-actions">
+          <button type="button" class="btn-cerrar" (click)="cerrar()">Cerrar</button>
+        </div>
+      </div>
+    } @else {
+      <div class="modal-header">
+        <h2>Nueva reserva</h2>
+        <button type="button" class="btn-close" (click)="cerrar()" aria-label="Cerrar">×</button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+        @if (error()) {
+          <p class="error-msg">{{ error() }}</p>
+        }
+        @if (loading()) {
+          <div class="loading-overlay">
+            <div class="spinner"></div>
+          </div>
+        }
+        <div class="field">
+          <label>Nombres</label>
+          <input formControlName="nombres" type="text" />
+          @if (hasError('nombres', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+          @if (hasError('nombres', 'minlength')) {
+            <span class="field-error">Mínimo 2 caracteres</span>
+          }
+        </div>
+        <div class="field">
+          <label>Apellidos</label>
+          <input formControlName="apellidos" type="text" />
+          @if (hasError('apellidos', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+          @if (hasError('apellidos', 'minlength')) {
+            <span class="field-error">Mínimo 2 caracteres</span>
+          }
+        </div>
+        <div class="field">
+          <label>Fecha nacimiento</label>
+          <input formControlName="fechaNacimiento" type="date" />
+          @if (hasError('fechaNacimiento', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+        <div class="field">
+          <label>Género</label>
+          <select formControlName="genero">
+            <option value="">Seleccione</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+          @if (hasError('genero', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+        <div class="field">
+          <label>Tipo documento</label>
+          <select formControlName="tipoDocumento">
+            <option value="">Seleccione</option>
+            <option value="DNI">DNI</option>
+            <option value="CE">Cédula</option>
+            <option value="Pasaporte">Pasaporte</option>
+          </select>
+          @if (hasError('tipoDocumento', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+        </div>
+        <div class="field">
+          <label>Número documento</label>
+          <input formControlName="numeroDocumento" type="text" />
+          @if (hasError('numeroDocumento', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+          @if (hasError('numeroDocumento', 'minlength')) {
+            <span class="field-error">Mínimo 5 caracteres</span>
+          }
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input formControlName="email" type="email" />
+          @if (hasError('email', 'required')) {
+            <span class="field-error">Requerido</span>
+          }
+          @if (hasError('email', 'email')) {
+            <span class="field-error">Email no válido</span>
+          }
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-cancel" (click)="cerrar()">Cancelar</button>
+          <button type="submit" class="btn-submit" [disabled]="loading()">
+            {{ loading() ? 'Reservando...' : 'Reservar' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
